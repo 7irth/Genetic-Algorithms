@@ -16,8 +16,12 @@ class Chromosome:
             while len(self.dna) < self.length:
                 self.dna += ('0' if random() < 0.5 else '1')
 
+        self.equation = self.translation()
         self.value = float(self.evaluate())
         self.fitness = None
+
+    def __str__(self):
+        return "{0} ({1}) -> {2}".format(self.dna, self.equation, self.value)
 
     # dna to genes (numbers and operators)
     def transcription(self):
@@ -69,11 +73,10 @@ class Chromosome:
 
     # sequential evaluation
     def evaluate(self):
-        equation = self.translation()
-        value = equation[0]
+        value = self.equation[0]
 
-        for i in range(1, len(equation), 2):
-            value = eval(str(value) + equation[i] + equation[i + 1])
+        for i in range(1, len(self.equation), 2):
+            value = eval(str(value) + self.equation[i] + self.equation[i + 1])
 
         return value
 

@@ -4,15 +4,8 @@ __author__ = 'tirth'
 # find a sequence that will represent a given target number.
 # The operators will be applied sequentially from left to right as you read.
 
-from chromosome import Chromosome
+from population import Population
 
-population = {}
-population_size = 100
-target = 42
+pop_pop = Population(100, 42)
 
-for i in range(population_size):
-    chromosome = Chromosome()
-    chromosome.set_fitness(target)
-    population[chromosome.dna] = chromosome
-
-print(population)
+print(pop_pop)
