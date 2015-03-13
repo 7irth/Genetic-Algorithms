@@ -6,6 +6,6 @@ __author__ = 'tirth'
 
 from population import Population
 
-pop_pop = Population(100, 42)
+pop_pop = Population()
 
-print(pop_pop)
+pop_pop.new_population()

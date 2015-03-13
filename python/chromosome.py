@@ -4,7 +4,7 @@ from random import random
 
 
 class Chromosome:
-    def __init__(self, dna=None):
+    def __init__(self, target, dna=None):
         self.codon_size = 4
         self.number_of_genes = 9
         self.length = self.codon_size * self.number_of_genes
@@ -18,16 +18,20 @@ class Chromosome:
 
         self.equation = self.translation()
         self.value = float(self.evaluate())
-        self.fitness = None
+
+        # fitness function, currently the inverse of the distance from target
+        self.fitness = 2 if self.value == target else \
+            abs(1 / (target - self.value))
 
     def __str__(self):
-        return "{0} ({1}) -> {2}".format(self.dna, self.equation, self.value)
+        return "{0} ({1}) -> {2} | {3}".format(self.dna, self.equation,
+                                               self.value, self.fitness)
 
     # dna to genes (numbers and operators)
     def transcription(self):
         genes = ''
 
-        # decoding
+        # decoding (only 4 bit codon)
         for i in range(self.codon_size, self.length + 1, self.codon_size):
             gene = int(self.dna[i - self.codon_size:i], 2)
 
@@ -79,9 +83,3 @@ class Chromosome:
             value = eval(str(value) + self.equation[i] + self.equation[i + 1])
 
         return value
-
-    def set_fitness(self, target):
-        if self.value == target:
-            self.fitness = 2
-        else:
-            self.fitness = abs(1 / (target - self.value))
