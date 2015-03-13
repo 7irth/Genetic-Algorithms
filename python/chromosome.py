@@ -8,6 +8,7 @@ class Chromosome:
         self.codon_size = 4
         self.number_of_genes = 9
         self.length = self.codon_size * self.number_of_genes
+        self.perfect_fit = 2
 
         if dna:
             self.dna = dna
@@ -20,7 +21,7 @@ class Chromosome:
         self.value = float(self.evaluate())
 
         # fitness function, currently the inverse of the distance from target
-        self.fitness = 2 if self.value == target else \
+        self.fitness = self.perfect_fit if self.value == target else \
             abs(1 / (target - self.value))
 
     def __str__(self):

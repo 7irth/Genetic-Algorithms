@@ -5,12 +5,12 @@ import random
 
 
 class Population:
-    def __init__(self, size=1000, target=42):
+    def __init__(self, size=1000, target=42, crossover=0.7, mutation=0.001):
         self.population = {}
         self.size = size
         self.target = target
-        self.crossover_rate = 0.7
-        self.mutation_rate = 0.001
+        self.crossover_rate = crossover
+        self.mutation_rate = mutation
 
         for _ in range(self.size):
             chromosome = Chromosome(target)
@@ -32,14 +32,49 @@ class Population:
             if current > pick:
                 return chromosome
 
-    def new_population(self):
+    def mutate(self, c):
+        new_c = ''
+
+        for bit in c.dna:
+            if random.random() < self.mutation_rate:
+                new_c += "0" if bit == "1" else "1"
+            else:
+                new_c += bit
+
+        return Chromosome(dna=new_c, target=self.target)
+
+    # TODO: creating Chromosome twice, simplify?
+    def cross_over(self, c1, c2):
+        if random.random() < self.crossover_rate:
+            start = random.randint(0, c1.length)
+
+            temp = c1.dna[start:]
+            new_c1 = Chromosome(dna=c1.dna[:start] + c2.dna[start:],
+                                target=self.target)
+            new_c2 = Chromosome(dna=c2.dna[:start] + temp, target=self.target)
+
+            return new_c1, new_c2
+        else:
+            return c1, c2
+
+    def next_generation(self):
         new_pop = {}
-        for _ in range(self.size):
-            a = self.select_roulette()
-            new_pop[a] = a.fitness
 
-        print(self.population.values())
-        print(new_pop.values())
+        for _ in range(self.size // 2):
+            uno = self.select_roulette()
+            dos = self.select_roulette()
 
-        print('old fitness', self.population_fitness)
-        print('new fitness', sum(new_pop.values()) / len(list(new_pop.keys())))
+            if uno != dos:
+                uno, dos = self.cross_over(uno, dos)
+                uno, dos = self.mutate(uno), self.mutate(dos)
+
+                new_pop[uno] = uno.fitness
+                new_pop[dos] = dos.fitness
+
+        # bring population back up
+        while len(list(new_pop.keys())) < self.size:
+            chromosome = Chromosome(self.target)
+            new_pop[chromosome] = chromosome.fitness
+
+        self.population = new_pop
+        self.population_fitness = sum(self.population.values()) / self.size
