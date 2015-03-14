@@ -65,8 +65,7 @@ class Population:
             dos = self.select_roulette()
 
             if uno != dos:
-                uno, dos = self.cross_over(uno, dos)
-                uno, dos = self.mutate(uno), self.mutate(dos)
+                uno, dos = self.cross_over(self.mutate(uno), self.mutate(dos))
 
                 new_pop[uno] = uno.fitness
                 new_pop[dos] = dos.fitness

@@ -9,6 +9,7 @@ class Chromosome:
         self.number_of_genes = 9
         self.length = self.codon_size * self.number_of_genes
         self.perfect_fit = 2
+        self.max_value = 9 ** self.number_of_genes // 2
 
         if dna:
             self.dna = dna
@@ -74,7 +75,7 @@ class Chromosome:
         # account for edge equation cases
         equation = '0' if not started else equation.replace('/0', '')
 
-        return equation[:-1] if not equation[-1].isdigit() else equation
+        return equation if equation[-1].isdigit() else equation[:-1]
 
     # sequential evaluation
     def evaluate(self):

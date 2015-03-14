@@ -5,26 +5,32 @@ __author__ = 'tirth'
 # The operators will be applied sequentially from left to right as you read.
 
 from population import Population
+from chromosome import Chromosome
 
 # --------- VALUES ---------
-target = 42
-generations = 5
-population = 2000
+target = 120
+population = 1000
 crossover_rate = 0.7
 mutation_rate = 0.001
 # --------------------------
 
+generations = 0
+
+print('max value: ', Chromosome(0).max_value)
+# target = float(input('enter target (ints please): '))
 pop_pop = Population(population, target, crossover_rate, mutation_rate)
 
 print('initial population fitness', pop_pop.population_fitness)
-solutions = [chromosome.equation for chromosome in pop_pop.population
-             if chromosome.fitness > 1]
-print('initial things for', target, set(solutions), '\n')
+solutions = set([chromosome.equation for chromosome in pop_pop.population
+                 if chromosome.fitness > 1])
 
-for _ in range(generations):
+while len(solutions) < 1:
     pop_pop.next_generation()
+    generations += 1
+    solutions = set([chromosome.equation for chromosome in pop_pop.population
+                     if chromosome.fitness > 1])
+    print('current population fitness', pop_pop.population_fitness,
+          generations)
 
-print('fitness after', generations, 'generations', pop_pop.population_fitness)
-solutions = [chromosome.equation for chromosome in pop_pop.population
-             if chromosome.fitness > 1]
-print('evolved things for', target, set(solutions))
+print('evolved {0} for {1} in {2} generations'.format(
+    solutions.pop(), target, generations))
