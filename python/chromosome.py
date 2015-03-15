@@ -4,11 +4,11 @@ from random import random
 
 
 class Chromosome:
-    def __init__(self, target, dna=None):
-        self.codon_size = 4
-        self.number_of_genes = 9
+    def __init__(self, target, gene_info, dna=None):
+        self.codon_size = gene_info[0]
+        self.number_of_genes = gene_info[1]
         self.length = self.codon_size * self.number_of_genes
-        self.perfect_fit = 2
+        self.perfect_fit = 999
         self.max_value = 9 ** self.number_of_genes // 2
 
         if dna:

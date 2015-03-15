@@ -8,29 +8,42 @@ from population import Population
 from chromosome import Chromosome
 
 # --------- VALUES ---------
-target = 120
-population = 1000
-crossover_rate = 0.7
+target = 1212
+population = 100
+crossover_rate = 0.5
 mutation_rate = 0.001
+codon_length = 4
+gene_size = 20
+generation_reset = 200
+max_generations = 100000
 # --------------------------
 
 generations = 0
 
-print('max value: ', Chromosome(0).max_value)
-# target = float(input('enter target (ints please): '))
-pop_pop = Population(population, target, crossover_rate, mutation_rate)
+print('max value: ', Chromosome(0, (4, 20)).max_value)
+# target = float(input('enter target (numbers please): '))
+pop_pop = Population(population, target, crossover_rate, mutation_rate,
+                     codon_length, gene_size)
 
 print('initial population fitness', pop_pop.population_fitness)
 solutions = set([chromosome.equation for chromosome in pop_pop.population
                  if chromosome.fitness > 1])
 
-while len(solutions) < 1:
-    pop_pop.next_generation()
+while len(solutions) < 1 and generations < max_generations:
+    pop_pop.extinction_event() if generations % generation_reset == 0 else \
+        pop_pop.next_generation()
+
     generations += 1
     solutions = set([chromosome.equation for chromosome in pop_pop.population
-                     if chromosome.fitness > 1])
-    print('current population fitness', pop_pop.population_fitness,
-          generations)
+                     if chromosome.fitness == chromosome.perfect_fit])
+    print('gen', generations, 'population fitness:',
+          pop_pop.population_fitness)
 
-print('evolved {0} for {1} in {2} generations'.format(
-    solutions.pop(), target, generations))
+    # for chromosome in pop_pop.population:
+    #     print(chromosome.value, end=', ')
+
+if len(solutions) > 0:
+    print('evolved {0} for {1} in {2} generations'.format(
+        solutions.pop(), target, generations))
+else:
+    print('limit reached without success')
