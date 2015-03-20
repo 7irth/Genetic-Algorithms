@@ -15,9 +15,11 @@ class Population:
         self.mutation_rate = mutation
         self.gene_info = (codon_length, gene_size)
 
-        for _ in range(self.size):
+        for i in range(self.size):
             chromosome = Chromosome(target, self.gene_info)
             self.population[chromosome] = chromosome.fitness
+            if i == 0:
+                self.max_value = chromosome.max_value
 
         self.population_fitness = sum(self.population.values()) / self.size
 

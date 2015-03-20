@@ -5,11 +5,10 @@ __author__ = 'tirth'
 # The operators will be applied sequentially from left to right as you read.
 
 from population import Population
-from chromosome import Chromosome
 
 # --------- VALUES ---------
-target = 1212
-population = 100
+target = 123
+population_size = 100
 crossover_rate = 0.5
 mutation_rate = 0.001
 codon_length = 4
@@ -18,17 +17,19 @@ generation_reset = 200
 max_generations = 100000
 # --------------------------
 
-generations = 0
-
-print('max value: ', Chromosome(0, (4, 20)).max_value)
+# get input and create population
+print('max value: ', Population(1).max_value)
 # target = float(input('enter target (numbers please): '))
-pop_pop = Population(population, target, crossover_rate, mutation_rate,
+pop_pop = Population(population_size, target, crossover_rate, mutation_rate,
                      codon_length, gene_size)
 
 print('initial population fitness', pop_pop.population_fitness)
 solutions = set([chromosome.equation for chromosome in pop_pop.population
                  if chromosome.fitness > 1])
 
+generations = 0
+
+# keep generating until we find an answer or hit the limit
 while len(solutions) < 1 and generations < max_generations:
     pop_pop.extinction_event() if generations % generation_reset == 0 else \
         pop_pop.next_generation()
@@ -42,6 +43,7 @@ while len(solutions) < 1 and generations < max_generations:
     # for chromosome in pop_pop.population:
     #     print(chromosome.value, end=', ')
 
+# see what we got
 if len(solutions) > 0:
     print('evolved {0} for {1} in {2} generations'.format(
         solutions.pop(), target, generations))

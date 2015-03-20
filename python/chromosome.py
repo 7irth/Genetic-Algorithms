@@ -33,11 +33,13 @@ class Chromosome:
     def transcription(self):
         genes = ''
 
-        # decoding (only 4 bit codon)
+        # decoding
         for i in range(self.codon_size, self.length + 1, self.codon_size):
             gene = int(self.dna[i - self.codon_size:i], 2)
 
-            if gene == 10:
+            if gene < 10:
+                genes += str(gene)
+            elif gene == 10:
                 genes += '+'
             elif gene == 11:
                 genes += '-'
@@ -45,10 +47,6 @@ class Chromosome:
                 genes += '*'
             elif gene == 13:
                 genes += '/'
-            elif gene == 14 or gene == 15:
-                genes += ''
-            else:
-                genes += str(gene)
 
         return genes
 
