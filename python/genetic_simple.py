@@ -7,7 +7,7 @@ __author__ = 'tirth'
 from population import Population
 
 # --------- VALUES ---------
-target = 123
+target = 142
 population_size = 100
 crossover_rate = 0.5
 mutation_rate = 0.001
